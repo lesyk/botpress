@@ -6,21 +6,14 @@ import _ from 'lodash'
 import moment from 'moment'
 import axios from 'axios'
 import { createConfig } from './configurator'
+import helpers from './helpers'
 
-import {
-  print,
-  isDeveloping,
-  npmCmd,
-  resolveModuleRootPath,
-  resolveFromDir,
-  resolveProjectFile
-} from './util'
+import { print, isDeveloping, npmCmd, resolveModuleRootPath, resolveFromDir, resolveProjectFile } from './util'
 
 const MODULES_URL = 'https://s3.amazonaws.com/botpress-io/all-modules.json'
 const FETCH_TIMEOUT = 5000
 
 module.exports = (logger, projectLocation, dataLocation, kvs) => {
-
   const log = (level, ...args) => {
     if (logger && logger[level]) {
       logger[level].apply(this, args)
@@ -30,9 +23,10 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
   }
 
   const fetchAllModules = () => {
-    return axios.get(MODULES_URL, { timeout: FETCH_TIMEOUT })
-    .then(({ data }) => data)
-    .catch(() => logger.error('Could not fetch modules'))
+    return axios
+      .get(MODULES_URL, { timeout: FETCH_TIMEOUT })
+      .then(({ data }) => data)
+      .catch(() => logger.error('Could not fetch modules'))
   }
 
   const loadModules = (moduleDefinitions, botpress) => {
@@ -40,6 +34,7 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
     const loadedModules = {}
 
     moduleDefinitions.forEach(mod => {
+      // eslint-disable-next-line no-eval
       const loader = eval('require')(mod.entry)
 
       if (typeof loader !== 'object') {
@@ -61,7 +56,7 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
       }
 
       try {
-        loader.init && loader.init(botpress, mod.configuration)
+        loader.init && loader.init(botpress, mod.configuration, helpers)
       } catch (err) {
         logger.warn('Error during module initialization: ', err)
       }
@@ -82,10 +77,12 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
     const packagePath = path.join(projectLocation, 'package.json')
 
     if (!fs.existsSync(packagePath)) {
-      return logger.warn('No package.json found at project root, ' +
-        'which means botpress can\'t load any module for the bot.')
+      return logger.warn(
+        'No package.json found at project root, ' + "which means botpress can't load any module for the bot."
+      )
     }
 
+    // eslint-disable-next-line no-eval
     const botPackage = eval('require')(packagePath)
 
     let deps = botPackage.dependencies || {}
@@ -93,40 +90,46 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
       deps = _.merge(deps, botPackage.devDependencies || {})
     }
 
-    return _.reduce(deps, (result, value, key) => {
-      if (!/^botpress-/i.test(key)) {
-        return result
-      }
-      const entry = resolveFromDir(projectLocation, key)
-      if (!entry) {
-        return result
-      }
-      const root = resolveModuleRootPath(entry)
-      if (!root) {
-        return result
-      }
+    return _.reduce(
+      deps,
+      (result, value, key) => {
+        if (!/^botpress-/i.test(key)) {
+          return result
+        }
+        const entry = resolveFromDir(projectLocation, key)
+        if (!entry) {
+          return result
+        }
+        const root = resolveModuleRootPath(entry)
+        if (!root) {
+          return result
+        }
 
-      const modulePackage = eval('require')(path.join(root, 'package.json'))
-      if (!modulePackage.botpress) {
-        return result
-      }
+        // eslint-disable-next-line no-eval
+        const modulePackage = eval('require')(path.join(root, 'package.json'))
+        if (!modulePackage.botpress) {
+          return result
+        }
 
-      return result.push({
-        name: key,
-        root: root,
-        homepage: modulePackage.homepage,
-        settings: modulePackage.botpress,
-        version: modulePackage.version,
-        entry: entry
-      }) && result
-    }, [])
+        return (
+          result.push({
+            name: key,
+            root: root,
+            homepage: modulePackage.homepage,
+            settings: modulePackage.botpress,
+            version: modulePackage.version,
+            entry: entry
+          }) && result
+        )
+      },
+      []
+    )
   }
 
   const getRandomCommunityHero = Promise.method(() => {
     const modulesCachePath = path.join(dataLocation, './modules-cache.json')
 
-    return listAllCommunityModules()
-    .then(() => {
+    return listAllCommunityModules().then(() => {
       const { modules } = JSON.parse(fs.readFileSync(modulesCachePath))
 
       const module = _.sample(modules)
@@ -153,7 +156,7 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
     })
   })
 
-  const mapModuleList = (modules) => {
+  const mapModuleList = modules => {
     const installed = listInstalledModules()
     return modules.map(mod => ({
       name: mod.name,
@@ -179,17 +182,19 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
   }
 
   const listAllCommunityModules = Promise.method(() => {
-
     if (!fs) {
       return [] // TODO Fetch & return
     }
 
     const modulesCachePath = path.join(dataLocation, './modules-cache.json')
     if (!fs.existsSync(modulesCachePath)) {
-      fs.writeFileSync(modulesCachePath, JSON.stringify({
-        modules: [],
-        updated: null
-      }))
+      fs.writeFileSync(
+        modulesCachePath,
+        JSON.stringify({
+          modules: [],
+          updated: null
+        })
+      )
     }
 
     const { modules, updated } = JSON.parse(fs.readFileSync(modulesCachePath))
@@ -200,9 +205,7 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
 
     return Promise.props({
       newModules: fetchAllModules()
-    })
-    .then(({ newModules }) => {
-
+    }).then(({ newModules }) => {
       if (!newModules || !newModules.length) {
         if (modules.length > 0) {
           logger.debug('Fetched invalid modules. Report this to the Botpress Team.')
@@ -212,26 +215,29 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
         }
       }
 
-      fs.writeFileSync(modulesCachePath, JSON.stringify({
-        modules: newModules,
-        updated: new Date()
-      }))
+      fs.writeFileSync(
+        modulesCachePath,
+        JSON.stringify({
+          modules: newModules,
+          updated: new Date()
+        })
+      )
 
       return mapModuleList(newModules)
     })
   })
 
-  const resolveModuleNames = (names) => {
+  const resolveModuleNames = names => {
     return names.map(name => {
-      if (!name || typeof(name) !== 'string') {
+      if (!name || typeof name !== 'string') {
         throw new TypeError('Expected module name to be a string')
       }
 
       let basename = path.basename(name)
-      let prefix = ''
+      let modulePath = ''
 
       if (basename !== name) {
-        prefix = name.substr(0, name.length - basename.length - 1)
+        modulePath = name.substr(0, name.length - basename.length)
       }
 
       if (basename.replace(/botpress-?/i, '').length === 0) {
@@ -242,21 +248,21 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
         basename = `botpress-${basename}`
       }
 
-      return prefix + basename
+      return path.join(modulePath, basename)
     })
   }
 
-  const runSpawn = (command) => {
+  const runSpawn = command => {
     return new Promise((resolve, reject) => {
-      command.stdout.on('data', (data) => {
+      command.stdout.on('data', data => {
         log('info', data.toString())
       })
 
-      command.stderr.on('data', (data) => {
+      command.stderr.on('data', data => {
         log('error', data.toString())
       })
 
-      command.on('close', (code) => {
+      command.on('close', code => {
         if (code > 0) {
           reject()
         } else {
@@ -276,11 +282,11 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
     log('info', 'Installing modules: ' + modules.join(', '))
 
     return runSpawn(install)
-    .then(() => log('success', 'Modules successfully installed'))
-    .catch(err => {
-      log('error', 'An error occurred during modules installation.')
-      throw err
-    })
+      .then(() => log('success', 'Modules successfully installed'))
+      .catch(err => {
+        log('error', 'An error occurred during modules installation.')
+        throw err
+      })
   })
 
   const uninstallModules = Promise.method((...names) => {
@@ -292,13 +298,12 @@ module.exports = (logger, projectLocation, dataLocation, kvs) => {
     log('info', `Uninstalling modules: ${modules.join(', ')}`)
 
     return runSpawn(uninstall)
-    .then(() => log('success', 'Modules successfully removed'))
-    .catch(err => {
-      log('error', 'An error occurred during modules removal.')
-      throw err
-    })
+      .then(() => log('success', 'Modules successfully removed'))
+      .catch(err => {
+        log('error', 'An error occurred during modules removal.')
+        throw err
+      })
   })
-
 
   const listInstalledModules = () => {
     const packagePath = resolveProjectFile('package.json', projectLocation, true)

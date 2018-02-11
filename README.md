@@ -2,6 +2,7 @@
 # [Botpress](https://botpress.io) — The only sane way of building great bots
 
 [![CircleCI](https://circleci.com/gh/botpress/botpress.svg?style=svg)](https://circleci.com/gh/botpress/botpress)
+[![npm](https://img.shields.io/npm/v/botpress.svg)](https://www.npmjs.com/package/botpress)
 
 Botpress is an open-source bot creation tool written in Javascript. It is powered by a rich set of open-source modules built by the community. We like to say that **Botpress is like the Wordpress of Chatbots**; anyone can create and reuse other people's modules.
 
@@ -21,18 +22,24 @@ Botpress is an open-source bot creation tool written in Javascript. It is powere
 
 ⚠️  Make sure you join our [Slack Community](https://slack.botpress.io) for help, announcements, gigs and fun!
 
+## Support the project ⭐
+
+If you feel awesome and want to support us in a small way, please consider starring and/or sharing the repo! This helps us getting known and grow the community. 🙏
+
+<img alt="Botpress" width="250" src="assets/star_us.gif">
+
 ## What is Botpress
 
-Botpress is on a mission to make useful bots ubiquitous by powering developers with the best possible tools to build & manage chatbots. We believe that in order to create great bots, major time should be spent on UX, **not** on the surrounding (and generic) features. 
+Botpress is on a mission to make useful bots ubiquitous by powering developers with the best possible tools to build & manage chatbots. We believe that in order to create great bots, major time should be spent on UX, **not** on the surrounding (and generic) features.
 
 Botpress is a free & open-source bot-building platform that ships with:
 * [**Connectors**](https://www.npmjs.com/search?q=botpress-connector) to the major chat platforms
 * [**Modular ecosystem**](https://www.npmjs.com/search?q=botpress) with over 29 modules
-* [**Flow-management**](https://botpress.io/docs/foundamentals/flow.html) system
+* [**Flow-management**](https://botpress.io/docs/en/docs/foundamentals/flow/) system
 * **Graphical interface** to edit and manage your bot in production
 * **Notification centre** to see what's hapenning with your bot
-* [**Data persistence**](https://botpress.io/docs/foundamentals/database.html) to database
-* [**Built-in API**](https://botpress.io/docs/modules/api.html) to integrate with external systems
+* [**Data persistence**](https://botpress.io/docs/en/docs/foundamentals/database/) to database
+* [**Built-in API**](https://botpress.io/docs/en/docs/modules/api/) to integrate with external systems
 
 ## <a name="what-it-looks-like">What it looks like </a>
 
@@ -60,7 +67,7 @@ Creating a bot is simple, you need to run [`botpress init`](https://botpress.io/
 botpress init my-bot
 ```
 
-Once your bot is created, you need to run [`botpress start`](https://botpress.io/docs/reference/cli.html#init) to start your bot:
+Once your bot is created, you need to run [`botpress start`](https://botpress.io/docs/reference/cli.html#start) to start your bot:
 
 ```
 botpress start
@@ -132,7 +139,25 @@ This is a non-exclusive list of modules Botpress has. See [the full list of modu
 | **[botpress-web](https://github.com/botpress/botpress-web)** | [@slvnperron](https://github.com/slvnperron)
 
 ## Contributing
-Check out our [contributing guide](./CONTRIBUTING.md) and our [community code of conduct](./CODE_OF_CONDUCT.md).
+
+Thanks you for your interest in Botpress. Here are some of the many ways to contribute.
+
+  - Check out our [contributing guide](/.github/CONTRIBUTING.md)
+  - Look at our [code of conduct](/.github/CODE_OF_CONDUCT.md)
+  - Engage with us on Social Media
+    - Follow us on [Twitter](https://twitter.com/getbotpress)
+    - Like us on [Facebook](https://www.facebook.com/botpress)
+    - Join our channel on [Slack](https://slack.botpress.io)
+  - Answer and ask questions on the Slack community
+  - [Donate](/.github/DONATE.md) to the project
+  - [Write and edit the documentation](/.github/CONTRIBUTING.md)
+  - Check misspelling in our docs.
+
+For starters, there are some open issues with the for-new-contributors tag which are ideal for starting to contribute. They are all relatively easy to get started with.
+
+If you would like to contribute any new feature or bug fix, please make sure that there is a GitHub issue first. If there is not, simply open one and assign it to yourself. If you are unsure on how to get started, ask us anything in the Slack or email us at info [AT] botpress.io.
+
+Contributions to Botpress will be dual-licensed under AGPLv3 and the Botpress Proprietary License. This means that all contributors need to agree to the dual-license before their contributions can be accepted.
 
 ## Community
 
