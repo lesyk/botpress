@@ -3,6 +3,7 @@
 
 [![CircleCI](https://circleci.com/gh/botpress/botpress.svg?style=svg)](https://circleci.com/gh/botpress/botpress)
 [![npm](https://img.shields.io/npm/v/botpress.svg)](https://www.npmjs.com/package/botpress)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Flesyk%2Fbotpress.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Flesyk%2Fbotpress?ref=badge_shield)
 
 Botpress is an open-source bot creation tool written in Javascript. It is powered by a rich set of open-source modules built by the community. We like to say that **Botpress is like the Wordpress of Chatbots**; anyone can create and reuse other people's modules.
 
@@ -172,6 +173,9 @@ Botpress is dual-licensed under [AGPLv3](/licenses/LICENSE_AGPL3) and the [Botpr
 By default, any bot created with Botpress is licensed under AGPLv3, but you may change to the Botpress License from within your bot's web interface in a few clicks.
 
 For more information about how the dual-license works and why it works that way please see the <a href="https://botpress.io/faq">FAQS</a>.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Flesyk%2Fbotpress.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Flesyk%2Fbotpress?ref=badge_large)
 
 ## Credits
 
